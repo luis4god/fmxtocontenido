@@ -1,130 +1,50 @@
 
-entity Cliente {
-	clienteName String,
-    web String,
-    cuit Integer
+
+enum TipoMedio {
+	LINK_WEB, YOUTUBE, DOWN_APP
 }
 
-entity Servicio {
-	cliente Cliente,
-	servicioName String,
-    valor ValorHora,
-    tipo ServicioTipo,
-    ini LocalDate,
-    fin LocalDate
+entity Libreria {
+	nameLibreria String required
 }
 
-entity ValorHora {
-	codigo String,
-    descripcion String,
-    valor BigDecimal
+entity Contenido {
+	nameContenido String required,
+    autor String,
+    album String,
+    genero String,
+    tipo TipoMedio,
+ 	linkUrl String,
+    medio Blob
 }
 
-// an ignored comment
-/** not an ignored comment */
-entity Producto {
-	productoName String,
-	descripcion String,
-	diagrama ImageBlob,
-	tecnologias String,
-    plataforma String
+entity Predicador {
+	namePredicador String required,
+    descripcion String
 }
 
-entity Pago {
-	cliente Cliente,
+entity Predica {
+	namePredica String required,
+    descriocion String,
     fecha LocalDate,
-    monto BigDecimal,
-    procesado LocalDate,
-    asentado LocalDate
+    tipo TipoMedio,
+    linkUrl String,
+    medio Blob
 }
-
-entity Cobranza {
-	servicio Servicio,
-    vencimiento LocalDate,
-    
-}
-
-entity Presupuesto {
-	cliente Cliente,
-    plazo String,
-    requerimiento Blob,
-    solucion Blob,
-    plazo String,
-    entrega LocalDate,
-    horasEstimadas Integer,
-    minPrecio BigDecimal,
-    maxPrecio BigDecimal,
-    total BigDecimal,
-    cupon Cupon
-}
-
-entity Cupon {
-cuponName String,
-descripcion String,
-tipo String,
-codigo String,
-ini LocalDate,
-fin LocalDate,
-descuento BigDecimal
-}
-
-entity Ambiente {
-sistemaOperativo String,
-lenguaje String,
-dataBase String
-}
-
-enum ServicioTipo {
-	HORAS, FEATURE, OBJETIVO
-}
-
-relationship OneToOne {
-	Cliente to Region
-}
-
-relationship OneToOne {
-	Location{country} to Country
-}
-
-relationship OneToOne {
-	Department{location} to Location
-}
-
-relationship ManyToMany {
-	Job{task(title)} to Task{job}
-}
-
 // defining multiple OneToMany relationships with comments
 relationship OneToMany {
-	Employee{job} to Job,
-	/**
-	* A relationship
-	*/
-	Department{employee} to
-	/**
-	* Another side of the same relationship
-	*/
-	Employee
+	Libreria{contenido} to Contenido,
+	Predicador{predica} to Predica
 }
 
-relationship ManyToOne {
-	Employee{manager} to Employee
-}
-
-// defining multiple oneToOne relationships
-relationship OneToOne {
-	JobHistory{job} to Job,
-	JobHistory{department} to Department,
-	JobHistory{employee} to Employee
-}
 
 // Set pagination options
-paginate JobHistory, Employee with infinite-scroll
-paginate Job with pagination
+paginate Libreria, Predicador with infinite-scroll
+paginate Contenido, Predica with pagination
 
 dto * with mapstruct
 
-// Set service options to all except few
-service all with serviceImpl except Employee, Job
+service all with serviceImpl except Libreria, Predicador
 // Set an angular suffix
-angularSuffix * with mySuffix
+angularSuffix * with fmxto
+
